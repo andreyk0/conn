@@ -24,7 +24,8 @@ user-level instructions, never in this file. Examples use `example.com`, `exampl
 
 `tests/no_leaks.rs` enforces what it can: the developer's home path and git email, email
 addresses outside the domains RFC 2606 reserves for examples, and every term in the denylist
-(which must exist, empty if need be), in every committable file and path, staged and in the
+(optional; without it the test warns that names are not checked), in every committable file
+and path, staged and in the
 working tree. It cannot know a name nobody listed, so read a fixture or test string through before adding
 it, and write a commit message with the same care (the test does not read it).
 

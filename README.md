@@ -188,12 +188,13 @@ refuses a memory-backed location, where the file would not survive the crash.
 `just check` runs the formatter check, clippy and the tests. `just install` puts the release
 build at `~/.cargo/bin/conn`; a running `conn serve` keeps the old binary until restarted.
 
-The tests include a leak check (`tests/no_leaks.rs`): no committable file, staged or in the
-working tree, may hold your home path, your git email, an email address outside the reserved
-example domains (`example.com`, `.test`, …), or a term listed in
-`~/.config/conn/leak-denylist` (employer, host, project or channel names, one per line; `abc-`
-matches the ticket keys `ABC-…`). The file must exist: create it empty if you have nothing to
-list.
+The tests include a leak check (`tests/no_leaks.rs`) that keeps personal and company data out
+of commits. It fails when a committable file, staged or in the working tree, holds your home
+path, your git email or an email address outside the reserved example domains (`example.com`,
+`.test`, …). To have it look for names too, list them in `~/.config/conn/leak-denylist`, one
+per line: employer, colleagues, hosts, projects, repositories, channels (without their `#`),
+and `abc-` to catch the ticket keys `ABC-…`; a line starting with `#` is a comment. Without
+that file the names are not checked, and the test says so.
 
 ## License
 

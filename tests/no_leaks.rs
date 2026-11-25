@@ -11,9 +11,9 @@
 //! - each line of the developer's denylist, `$XDG_CONFIG_HOME/conn/leak-denylist` (else
 //!   `~/.config/conn/leak-denylist`): employer, colleague, host, project and channel names
 //!   (without a channel's `#`), one per line; a line starting with `#` is a comment. It lives
-//!   outside the repository because its contents are exactly what must not be in it. It must
-//!   exist: a missing one fails the test, saying how to create it, and an empty one is a
-//!   developer's statement that they have nothing to list.
+//!   outside the repository because its contents are exactly what must not be in it. It is
+//!   optional: without it the test says on the terminal that names are not checked, where the
+//!   file goes and what it holds, and runs the other rules.
 //!
 //! Text and terms are compared folded: lower-cased, every run of whitespace one space, so a name
 //! split across a line break still matches. A term matches wherever no letter or digit adjoins
@@ -476,17 +476,43 @@ fn parse_denylist(text: &str) -> Vec<Term> {
         .collect()
 }
 
-enum Denylist {
-    Read(Vec<Term>),
-    Missing,
-}
-
-fn read_denylist(path: &Path) -> Denylist {
+/// The denylist's terms, or `None` when there is no file. A file that exists but cannot be read
+/// fails the test.
+fn read_denylist(path: &Path) -> Option<Vec<Term>> {
     match std::fs::read_to_string(path) {
-        Ok(text) => Denylist::Read(parse_denylist(&text)),
-        Err(error) if error.kind() == std::io::ErrorKind::NotFound => Denylist::Missing,
+        Ok(text) => Some(parse_denylist(&text)),
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => None,
         Err(error) => panic!("could not read the denylist {}: {error}", path.display()),
     }
+}
+
+/// Says the denylist check is skipped, and how to turn it on. Written to the stderr handle, not
+/// with `eprintln!`, which the test harness captures and shows only for a failing test.
+fn warn_no_denylist(path: &Path) {
+    let note = format!(
+        "\nnote: no_leaks is not checking for company names: {} does not exist.\n\
+         \x20     Create it and the check runs: one name per line (employer, colleagues, hosts,\n\
+         \x20     projects, repositories, channels without their #; `abc-` for ticket keys\n\
+         \x20     ABC-...), lines starting with # are comments. Your home path, git email and\n\
+         \x20     other email addresses are checked either way.\n",
+        path.display()
+    );
+    std::io::stderr().write_all(note.as_bytes()).unwrap();
+}
+
+/// One line of the failure report: where, what kind of thing, and the text that matched.
+fn describe(hit: &Hit) -> String {
+    let place = match hit.place {
+        Place::Path => " (the file's path)".to_owned(),
+        Place::Line(line) => format!(":{line}"),
+    };
+    let what = match hit.rule {
+        Rule::Term(Source::Denylist) => "a name from your leak-denylist",
+        Rule::Term(Source::HomeDir) => "your home directory",
+        Rule::Term(Source::GitIdentity) => "your git email",
+        Rule::Email => "an email address",
+    };
+    format!("  {}{place}: {what}: {}", hit.path, hit.text)
 }
 
 #[test]
@@ -497,14 +523,10 @@ fn the_repository_holds_nothing_personal_company_specific_or_local() {
         std::env::var_os("XDG_CONFIG_HOME"),
         std::env::var_os("HOME"),
     );
-    let denylist = match read_denylist(&path) {
-        Denylist::Read(terms) => terms,
-        Denylist::Missing => panic!(
-            "no denylist at {}: list the names that must never be committed there (employer, \
-             hosts, projects, channels), one per line; create it empty if there are none",
-            path.display()
-        ),
-    };
+    let denylist = read_denylist(&path).unwrap_or_else(|| {
+        warn_no_denylist(&path);
+        Vec::new()
+    });
     let terms: Vec<Term> = home_terms(&home)
         .into_iter()
         .chain(git_identity(&root))
@@ -512,17 +534,16 @@ fn the_repository_holds_nothing_personal_company_specific_or_local() {
         .collect();
     let report: Vec<String> = scan_repository(&root, &terms)
         .iter()
-        .map(|hit| {
-            format!(
-                "{}: {:?}: {:?}: {}",
-                hit.path, hit.place, hit.rule, hit.text
-            )
-        })
+        .map(describe)
         .collect();
     assert!(
         report.is_empty(),
-        "identifying text:\n{}",
-        report.join("\n")
+        "\nThese would publish something personal, company-specific or machine-local:\n\n{}\n\n\
+         Replace each with an invented example (example.com, ABC-123, /home/dev; see \"What \
+         never gets committed\" in CLAUDE.md). A staged copy counts too, so stage the fix. A name \
+         from your leak-denylist that is fine here is removed from {}.\n",
+        report.join("\n"),
+        path.display()
     );
 }
 
@@ -636,19 +657,40 @@ fn a_denylist_line_is_a_term_unless_it_starts_with_a_hash() {
     assert_eq!(places(&hits), [line(1)]);
 }
 
-/// Mutation, each ran red: read a missing file as an empty denylist; read an empty one as
-/// missing.
+/// Mutation, each ran red: fail on a missing file; read a missing file as an empty one.
 #[test]
 fn a_missing_denylist_is_told_apart_from_an_empty_one() {
     let dir = Path::new(env!("CARGO_TARGET_TMPDIR")).join("no_leaks_denylist");
     std::fs::create_dir_all(&dir).unwrap();
     let empty = dir.join("empty");
     std::fs::write(&empty, "").unwrap();
-    assert!(matches!(
-        read_denylist(&dir.join("absent")),
-        Denylist::Missing
-    ));
-    assert!(matches!(read_denylist(&empty), Denylist::Read(terms) if terms.is_empty()));
+    assert!(read_denylist(&dir.join("absent")).is_none());
+    assert!(read_denylist(&empty).is_some_and(|terms| terms.is_empty()));
+}
+
+/// Mutation, ran red: read any error as a missing file.
+#[test]
+#[should_panic(expected = "could not read the denylist")]
+fn a_denylist_that_cannot_be_read_fails() {
+    let dir = Path::new(env!("CARGO_TARGET_TMPDIR")).join("no_leaks_denylist_dir");
+    std::fs::create_dir_all(&dir).unwrap();
+    let _ = read_denylist(&dir);
+}
+
+/// Mutation, ran red: drop the line number.
+#[test]
+fn a_hit_reads_as_where_what_and_the_text() {
+    let hits = scan(
+        "docs/x.md",
+        "a\nbuilt for Acme\n",
+        &[term("acme")],
+        &email_pattern(),
+    );
+    let lines: Vec<String> = hits.iter().map(describe).collect();
+    assert_eq!(
+        lines,
+        ["  docs/x.md:2: a name from your leak-denylist: acme"]
+    );
 }
 
 /// Mutation, each ran red: use an empty `XDG_CONFIG_HOME`; use a relative one.
