@@ -1,0 +1,244 @@
+[
+  {
+    "key": "EX-1",
+    "id": "10001",
+    "self": "https://example.atlassian.net/rest/api/3/issue/10001",
+    "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+    "fields": {
+      "summary": "Placeholder summary one",
+      "status": {
+        "name": "In Progress",
+        "description": "Placeholder status description.",
+        "iconUrl": "https://example.test/status.png",
+        "id": "3",
+        "statusCategory": {
+          "key": "indeterminate",
+          "name": "In Progress",
+          "colorName": "blue-gray",
+          "id": 3
+        }
+      },
+      "issuetype": {
+        "name": "Task",
+        "subtask": false,
+        "hierarchyLevel": 0,
+        "id": "1",
+        "description": "Placeholder type.",
+        "iconUrl": "https://example.test/type.png",
+        "avatarId": 1
+      },
+      "priority": {
+        "name": "High",
+        "id": "2",
+        "iconUrl": "https://example.test/priority.png"
+      },
+      "creator": {
+        "displayName": "Person One",
+        "accountId": "000000000000000000000001",
+        "emailAddress": "one@example.test",
+        "active": true,
+        "avatarUrls": {
+          "48x48": "https://example.test/avatar/48",
+          "24x24": "https://example.test/avatar/24",
+          "16x16": "https://example.test/avatar/16",
+          "32x32": "https://example.test/avatar/32"
+        },
+        "timeZone": "Etc/UTC"
+      },
+      "assignee": {
+        "displayName": "Person Two",
+        "accountId": "000000000000000000000002",
+        "emailAddress": "two@example.test",
+        "active": true,
+        "avatarUrls": {
+          "48x48": "https://example.test/avatar/48",
+          "24x24": "https://example.test/avatar/24",
+          "16x16": "https://example.test/avatar/16",
+          "32x32": "https://example.test/avatar/32"
+        },
+        "timeZone": "Etc/UTC"
+      },
+      "description": "Placeholder wiki text description one."
+    },
+    "changelog": null,
+    "editmeta": null,
+    "names": null,
+    "operations": null,
+    "properties": null,
+    "renderedFields": null,
+    "schema": null,
+    "transitions": null,
+    "versionedRepresentations": null,
+    "fieldsToInclude": null
+  },
+  {
+    "key": "EX-2",
+    "id": "10002",
+    "self": "https://example.atlassian.net/rest/api/3/issue/10002",
+    "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+    "fields": {
+      "summary": "Placeholder summary two",
+      "status": {
+        "name": "To Do",
+        "description": "Placeholder status description.",
+        "iconUrl": "https://example.test/status.png",
+        "id": "2",
+        "statusCategory": {
+          "key": "new",
+          "name": "To Do",
+          "colorName": "blue-gray",
+          "id": 2
+        }
+      },
+      "issuetype": {
+        "name": "Bug",
+        "subtask": false,
+        "hierarchyLevel": 0,
+        "id": "1",
+        "description": "Placeholder type.",
+        "iconUrl": "https://example.test/type.png",
+        "avatarId": 1
+      },
+      "priority": {
+        "name": "Medium",
+        "id": "3",
+        "iconUrl": "https://example.test/priority.png"
+      },
+      "creator": {
+        "displayName": "Person Two",
+        "accountId": "000000000000000000000002",
+        "emailAddress": "two@example.test",
+        "active": true,
+        "avatarUrls": {
+          "48x48": "https://example.test/avatar/48",
+          "24x24": "https://example.test/avatar/24",
+          "16x16": "https://example.test/avatar/16",
+          "32x32": "https://example.test/avatar/32"
+        },
+        "timeZone": "Etc/UTC"
+      },
+      "assignee": {
+        "displayName": "Person Two",
+        "accountId": "000000000000000000000002",
+        "emailAddress": "two@example.test",
+        "active": true,
+        "avatarUrls": {
+          "48x48": "https://example.test/avatar/48",
+          "24x24": "https://example.test/avatar/24",
+          "16x16": "https://example.test/avatar/16",
+          "32x32": "https://example.test/avatar/32"
+        },
+        "timeZone": "Etc/UTC"
+      },
+      "description": {
+        "type": "doc",
+        "version": 1,
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              {
+                "type": "text",
+                "text": "Placeholder first "
+              },
+              {
+                "type": "text",
+                "text": "paragraph.",
+                "marks": [
+                  {
+                    "type": "strong"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "bulletList",
+            "content": [
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Placeholder item."
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "changelog": null,
+    "editmeta": null,
+    "names": null,
+    "operations": null,
+    "properties": null,
+    "renderedFields": null,
+    "schema": null,
+    "transitions": null,
+    "versionedRepresentations": null,
+    "fieldsToInclude": null
+  },
+  {
+    "key": "EX-3",
+    "id": "10003",
+    "self": "https://example.atlassian.net/rest/api/3/issue/10003",
+    "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+    "fields": {
+      "summary": "Placeholder summary three",
+      "status": {
+        "name": "Parked",
+        "description": "Placeholder status description.",
+        "iconUrl": "https://example.test/status.png",
+        "id": "1",
+        "statusCategory": {
+          "key": "undefined",
+          "name": "No Category",
+          "colorName": "blue-gray",
+          "id": 1
+        }
+      },
+      "issuetype": {
+        "name": "Epic",
+        "subtask": false,
+        "hierarchyLevel": 1,
+        "id": "1",
+        "description": "Placeholder type.",
+        "iconUrl": "https://example.test/type.png",
+        "avatarId": 1
+      },
+      "priority": null,
+      "creator": {
+        "displayName": "Person One",
+        "accountId": "000000000000000000000001",
+        "emailAddress": "one@example.test",
+        "active": true,
+        "avatarUrls": {
+          "48x48": "https://example.test/avatar/48",
+          "24x24": "https://example.test/avatar/24",
+          "16x16": "https://example.test/avatar/16",
+          "32x32": "https://example.test/avatar/32"
+        },
+        "timeZone": "Etc/UTC"
+      },
+      "assignee": null,
+      "description": null
+    },
+    "changelog": null,
+    "editmeta": null,
+    "names": null,
+    "operations": null,
+    "properties": null,
+    "renderedFields": null,
+    "schema": null,
+    "transitions": null,
+    "versionedRepresentations": null,
+    "fieldsToInclude": null
+  }
+]

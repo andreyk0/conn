@@ -1,0 +1,42 @@
+{
+  "isDraft": false,
+  "mergedAt": null,
+  "number": 42,
+  "reviewDecision": "APPROVED",
+  "state": "OPEN",
+  "statusCheckRollup": [
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-10-20T09:05:00Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/example-org/example-repo/actions/runs/1001",
+      "name": "build",
+      "startedAt": "2026-10-20T09:00:00Z",
+      "status": "COMPLETED",
+      "workflowName": "Placeholder workflow"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "0001-01-01T00:00:00Z",
+      "conclusion": "",
+      "detailsUrl": "https://github.com/example-org/example-repo/actions/runs/1001",
+      "name": "deploy",
+      "startedAt": "2026-10-20T09:00:00Z",
+      "status": "QUEUED",
+      "workflowName": "Placeholder workflow"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "0001-01-01T00:00:00Z",
+      "conclusion": "",
+      "detailsUrl": "https://github.com/example-org/example-repo/actions/runs/1001",
+      "name": "e2e",
+      "startedAt": "2026-10-20T09:00:00Z",
+      "status": "IN_PROGRESS",
+      "workflowName": "Placeholder workflow"
+    }
+  ],
+  "title": "Placeholder pull request title",
+  "updatedAt": "2026-10-20T09:10:00Z",
+  "url": "https://github.com/example-org/example-repo/pull/42"
+}

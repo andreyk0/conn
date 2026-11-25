@@ -1,0 +1,74 @@
+[package]
+name = "conn"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.99"
+description = "Local tool for one developer running many Claude Code sessions"
+license = "MIT OR Apache-2.0"
+publish = false
+
+[dependencies]
+anyhow = "1"
+axum = { version = "0.8", default-features = false, features = ["http1", "tokio", "query", "form", "json"] }
+clap = { version = "4.6", features = ["derive"] }
+# The per-launch token comes from the operating system's random source.
+getrandom = "0.4"
+jiff = { version = "0.2", features = ["serde"] }
+maud = { version = "0.27", features = ["axum"] }
+# Project names are free text, so they travel in a URL path percent-encoded.
+percent-encoding = "2"
+# Assistant text is markdown. Its events are folded into maud markup, so the crate's own HTML
+# writer is left out.
+pulldown-cmark = { version = "0.13", default-features = false }
+regex = "1.13"
+# Safe statfs, to refuse a snapshot on a memory-backed filesystem; `unsafe` is forbidden here.
+rustix = { version = "1.1", default-features = false, features = ["fs", "std"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+serde_urlencoded = "0.7"
+# The token is compared without an early exit.
+subtle = "2.6"
+thiserror = "2"
+tokio = { version = "1.54", features = ["rt-multi-thread", "macros", "process", "time", "fs", "io-util", "net", "signal"] }
+toml = "1"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt"] }
+
+[dev-dependencies]
+insta = "1.49"
+proptest = "1.12"
+tower = { version = "0.5", features = ["util"] }
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip = true
+
+[lints.rust]
+unsafe_code = "forbid"
+unreachable_pub = "warn"
+
+[lints.clippy]
+all = { level = "deny", priority = -1 }
+pedantic = { level = "deny", priority = -1 }
+# Every one of these turns a runtime surprise into a compile-time refusal.
+unwrap_used = "deny"
+expect_used = "deny"
+panic = "deny"
+indexing_slicing = "deny"
+todo = "deny"
+dbg_macro = "deny"
+as_conversions = "deny"
+wildcard_enum_match_arm = "deny"
+string_slice = "deny"
+# stdout is the hook protocol channel and the HTML/JSON output channel; only the replay and
+# snapshot modules print reports, and `web` prints the one sign-in line, each with a reasoned
+# allow.
+print_stdout = "warn"
+print_stderr = "warn"
+# The crate is a binary's internals, so the names repeat the module by design.
+module_name_repetitions = "allow"
+# Errors are documented by their enum variants, which are the contract.
+missing_errors_doc = "allow"
+# Nearly every pure function here would qualify; the attribute is noise.
+must_use_candidate = "allow"

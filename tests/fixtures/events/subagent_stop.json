@@ -1,0 +1,16 @@
+{
+  "session_id": "0a1b2c3d-4e5f-4a6b-8c7d-9e0f1a2b3c4d",
+  "transcript_path": "/home/dev/.claude/projects/-home-dev-proj/0a1b2c3d-4e5f-4a6b-8c7d-9e0f1a2b3c4d.jsonl",
+  "cwd": "/home/dev/proj",
+  "hook_event_name": "SubagentStop",
+  "agent_id": "agent-0001",
+  "agent_transcript_path": "/home/dev/.claude/projects/-home-dev-proj/0a1b2c3d-4e5f-4a6b-8c7d-9e0f1a2b3c4d/subagents/agent-0001.jsonl",
+  "agent_type": "general-purpose",
+  "background_tasks": [],
+  "effort": "high",
+  "last_assistant_message": "Placeholder subagent message.",
+  "permission_mode": "default",
+  "prompt_id": "5d1c2f0e-7a3b-4c9d-8e1f-0a2b3c4d5e6f",
+  "session_crons": [],
+  "stop_hook_active": false
+}

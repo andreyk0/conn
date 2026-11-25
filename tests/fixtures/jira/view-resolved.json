@@ -1,0 +1,39 @@
+{
+  "changelog": null,
+  "editmeta": null,
+  "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations",
+  "fields": {
+    "resolution": {
+      "description": "GreenHopper Managed Resolution",
+      "id": "10000",
+      "name": "Done",
+      "self": "https://example.atlassian.net/rest/api/3/resolution/10000"
+    },
+    "resolutiondate": "2026-11-16T13:00:00.250+0100",
+    "status": {
+      "description": "",
+      "iconUrl": "https://example.atlassian.net/",
+      "id": "10001",
+      "name": "Done",
+      "self": "https://example.atlassian.net/rest/api/3/status/10001",
+      "statusCategory": {
+        "colorName": "green",
+        "id": 3,
+        "key": "done",
+        "name": "Done",
+        "self": "https://example.atlassian.net/rest/api/3/statuscategory/3"
+      }
+    }
+  },
+  "fieldsToInclude": null,
+  "id": "100001",
+  "key": "ABC-123",
+  "names": null,
+  "operations": null,
+  "properties": null,
+  "renderedFields": null,
+  "schema": null,
+  "self": "https://example.atlassian.net/rest/api/3/issue/100001",
+  "transitions": null,
+  "versionedRepresentations": null
+}

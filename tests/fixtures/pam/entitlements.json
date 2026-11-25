@@ -1,0 +1,68 @@
+[
+  {
+    "additionalNotificationTargets": {},
+    "createTime": "2025-01-01T00:00:00.100000001Z",
+    "etag": "\"MDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwAAAAAAAAAAE=\"",
+    "maxRequestDuration": "3600s",
+    "name": "folders/111/locations/global/entitlements/admin",
+    "privilegedAccess": {
+      "gcpIamAccess": {
+        "resource": "//cloudresourcemanager.googleapis.com/folders/111",
+        "resourceType": "cloudresourcemanager.googleapis.com/Folder",
+        "roleBindings": [
+          {
+            "conditionExpression": "resource.matchTagId('tagKeys/100', 'tagValues/200')",
+            "role": "roles/admin"
+          }
+        ]
+      }
+    },
+    "requesterJustificationConfig": {
+      "notMandatory": {}
+    },
+    "state": "AVAILABLE",
+    "updateTime": "2026-11-01T12:00:00.300000003Z"
+  },
+  {
+    "approvalWorkflow": {
+      "manualApprovals": {
+        "requireApproverJustification": true,
+        "steps": [
+          {
+            "approvalsNeeded": 1,
+            "approvers": [
+              {
+                "principals": [
+                  "group:team-a@example.com"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "createTime": "2024-01-01T00:00:00.200000002Z",
+    "etag": "\"MDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwAAAAAAAAAAI=\"",
+    "maxRequestDuration": "28800s",
+    "name": "projects/example-project/locations/global/entitlements/become-network-admin",
+    "privilegedAccess": {
+      "gcpIamAccess": {
+        "resource": "//cloudresourcemanager.googleapis.com/projects/example-project",
+        "resourceType": "cloudresourcemanager.googleapis.com/Project",
+        "roleBindings": [
+          {
+            "role": "roles/compute.networkAdmin"
+          },
+          {
+            "role": "roles/compute.securityAdmin"
+          }
+        ]
+      }
+    },
+    "requesterJustificationConfig": {
+      "unstructured": {}
+    },
+    "state": "AVAILABLE",
+    "updateTime": "2026-11-01T06:00:00.400000004Z"
+  }
+]

@@ -1,0 +1,428 @@
+[
+ {
+  "name": "dormant, last mode bypass: skip-permissions",
+  "launch": null,
+  "mode": "bypassPermissions",
+  "added_dirs": [],
+  "cwd": "/home/dev/proj",
+  "expected": "cd /home/dev/proj && claude --dangerously-skip-permissions --resume 00000000-0000-4000-8000-000000000042",
+  "warnings": [
+   "launch-time flags (system prompts, tool and MCP restrictions, settings, plugins) are unknown, because the session has no live process"
+  ]
+ },
+ {
+  "name": "dormant, last mode default: no flags",
+  "launch": null,
+  "mode": "default",
+  "added_dirs": [],
+  "cwd": "/home/dev/proj",
+  "expected": "cd /home/dev/proj && claude --resume 00000000-0000-4000-8000-000000000042",
+  "warnings": [
+   "launch-time flags (system prompts, tool and MCP restrictions, settings, plugins) are unknown, because the session has no live process"
+  ]
+ },
+ {
+  "name": "dormant, no mode: no flags and both doubts",
+  "launch": null,
+  "mode": null,
+  "added_dirs": [],
+  "cwd": "/home/dev/proj",
+  "expected": "cd /home/dev/proj && claude --resume 00000000-0000-4000-8000-000000000042",
+  "warnings": [
+   "launch-time flags (system prompts, tool and MCP restrictions, settings, plugins) are unknown, because the session has no live process",
+   "the permission mode is unknown, so bypass mode is not requested"
+  ]
+ },
+ {
+  "name": "launched in bypass, since left it: allow only",
+  "launch": [
+   "claude",
+   "--dangerously-skip-permissions"
+  ],
+  "mode": "plan",
+  "added_dirs": [],
+  "cwd": "/home/dev/proj",
+  "expected": "cd /home/dev/proj && claude --allow-dangerously-skip-permissions --resume 00000000-0000-4000-8000-000000000042",
+  "warnings": []
+ },
+ {
+  "name": "launched in bypass, no mode recorded: launch decides",
+  "launch": [
+   "claude",
+   "--dangerously-skip-permissions"
+  ],
+  "mode": null,
+  "added_dirs": [],
+  "cwd": "/home/dev/proj",
+  "expected": "cd /home/dev/proj && claude --dangerously-skip-permissions --resume 00000000-0000-4000-8000-000000000042",
+  "warnings": [
+   "the transcript records no permission mode, so bypass mode follows the launch flags"
+  ]
+ },
+ {
+  "name": "launched with --permission-mode bypassPermissions, no mode recorded",
+  "launch": [
+   "claude",
+   "--permission-mode",
+   "bypassPermissions"
+  ],
+  "mode": null,
+  "added_dirs": [],
+  "cwd": "/home/dev/proj",
+  "expected": "cd /home/dev/proj && claude --dangerously-skip-permissions --resume 00000000-0000-4000-8000-000000000042",
+  "warnings": [
+   "the transcript records no permission mode, so bypass mode follows the launch flags"
+  ]
+ },
+ {
+  "name": "inline --permission-mode=bypassPermissions, since left it",
+  "launch": [
+   "claude",
+   "--permission-mode=bypassPermissions"
+  ],
+  "mode": "acceptEdits",
+  "added_dirs": [],
+  "cwd": "/home/dev/proj",
+  "expected": "cd /home/dev/proj && claude --allow-dangerously-skip-permissions --resume 00000000-0000-4000-8000-000000000042",
+  "warnings": []
+ },
+ {
+  "name": "launched allowing bypass, never in it",
+  "launch": [
+   "claude",
+   "--allow-dangerously-skip-permissions"
+  ],
+  "mode": "default",
+  "added_dirs": [],
+  "cwd": "/home/dev/proj",
+  "expected": "cd /home/dev/proj && claude --allow-dangerously-skip-permissions --resume 00000000-0000-4000-8000-000000000042",
+  "warnings": []
+ },
+ {
+  "name": "plain launch, mode recorded: nothing to repeat",
+  "launch": [
+   "claude"
+  ],
+  "mode": "default",
+  "added_dirs": [],
+  "cwd": "/home/dev/proj",
+  "expected": "cd /home/dev/proj && claude --resume 00000000-0000-4000-8000-000000000042",
+  "warnings": []
+ },
+ {
+  "name": "plain launch, no mode recorded",
+  "launch": [
+   "claude"
+  ],
+  "mode": null,
+  "added_dirs": [],
+  "cwd": "/home/dev/proj",
+  "expected": "cd /home/dev/proj && claude --resume 00000000-0000-4000-8000-000000000042",
+  "warnings": [
+   "the transcript records no permission mode, so bypass mode follows the launch flags"
+  ]
+ },
+ {
+  "name": "bypass recorded though the launch did not ask for it",
+  "launch": [
+   "claude"
+  ],
+  "mode": "bypassPermissions",
+  "added_dirs": [],
+  "cwd": "/home/dev/proj",
+  "expected": "cd /home/dev/proj && claude --dangerously-skip-permissions --resume 00000000-0000-4000-8000-000000000042",
+  "warnings": []
+ },
+ {
+  "name": "chrome is carried",
+  "launch": [
+   "claude",
+   "--chrome"
+  ],
+  "mode": "default",
+  "added_dirs": [],
+  "cwd": "/home/dev/proj",
+  "expected": "cd /home/dev/proj && claude --chrome --resume 00000000-0000-4000-8000-000000000042",
+  "warnings": []
+ },
+ {
+  "name": "chrome with an inline value stays as launched",
+  "launch": [
+   "claude",
+   "--chrome=1"
+  ],
+  "mode": "default",
+  "added_dirs": [],
+  "cwd": "/home/dev/proj",
+  "expected": "cd /home/dev/proj && claude --chrome=1 --resume 00000000-0000-4000-8000-000000000042",
+  "warnings": []
+ },
+ {
+  "name": "no-chrome and ide are carried",
+  "launch": [
+   "claude",
+   "--no-chrome",
+   "--ide"
+  ],
+  "mode": "default",
+  "added_dirs": [],
+  "cwd": "/home/dev/proj",
+  "expected": "cd /home/dev/proj && claude --no-chrome --ide --resume 00000000-0000-4000-8000-000000000042",
+  "warnings": []
+ },
+ {
+  "name": "flags a resume restores or that pick a session are dropped",
+  "launch": [
+   "claude",
+   "--model",
+   "opus",
+   "--permission-mode",
+   "plan",
+   "--agent",
+   "a",
+   "-c",
+   "--name",
+   "n",
+   "--verbose",
+   "--debug",
+   "-n",
+   "x",
+   "-d",
+   "-r",
+   "id",
+   "--fork-session",
+   "--session-id",
+   "i",
+   "--from-pr",
+   "1",
+   "--teleport",
+   "--worktree",
+   "-w",
+   "--bg",
+   "--background",
+   "--print",
+   "-p",
+   "--output-format",
+   "json",
+   "--input-format",
+   "text",
+   "--debug-file",
+   "f",
+   "--tmux",
+   "--resume",
+   "id"
+  ],
+  "mode": "default",
+  "added_dirs": [],
+  "cwd": "/home/dev/proj",
+  "expected": "cd /home/dev/proj && claude --resume 00000000-0000-4000-8000-000000000042",
+  "warnings": []
+ },
+ {
+  "name": "inline dropped flag",
+  "launch": [
+   "claude",
+   "--model=opus"
+  ],
+  "mode": "default",
+  "added_dirs": [],
+  "cwd": "/home/dev/proj",
+  "expected": "cd /home/dev/proj && claude --resume 00000000-0000-4000-8000-000000000042",
+  "warnings": []
+ },
+ {
+  "name": "a positional prompt is skipped",
+  "launch": [
+   "claude",
+   "do the thing",
+   "--chrome"
+  ],
+  "mode": "default",
+  "added_dirs": [],
+  "cwd": "/home/dev/proj",
+  "expected": "cd /home/dev/proj && claude --chrome --resume 00000000-0000-4000-8000-000000000042",
+  "warnings": []
+ },
+ {
+  "name": "an unknown flag is left off and named",
+  "launch": [
+   "claude",
+   "--frobnicate",
+   "x",
+   "--chrome",
+   "--zap=1"
+  ],
+  "mode": "default",
+  "added_dirs": [],
+  "cwd": "/home/dev/proj",
+  "expected": "cd /home/dev/proj && claude --chrome --resume 00000000-0000-4000-8000-000000000042",
+  "warnings": [
+   "not carried, and not known to be restored by a resume: --frobnicate, --zap"
+  ]
+ },
+ {
+  "name": "a system prompt is quoted for the shell",
+  "launch": [
+   "claude",
+   "--system-prompt",
+   "be brief, it's late"
+  ],
+  "mode": "default",
+  "added_dirs": [],
+  "cwd": "/home/dev/proj",
+  "expected": "cd /home/dev/proj && claude --system-prompt 'be brief, it'\\''s late' --resume 00000000-0000-4000-8000-000000000042",
+  "warnings": []
+ },
+ {
+  "name": "the first value is taken even when it starts with a dash",
+  "launch": [
+   "claude",
+   "--system-prompt",
+   "- first",
+   "--chrome"
+  ],
+  "mode": "default",
+  "added_dirs": [],
+  "cwd": "/home/dev/proj",
+  "expected": "cd /home/dev/proj && claude --system-prompt '- first' --chrome --resume 00000000-0000-4000-8000-000000000042",
+  "warnings": []
+ },
+ {
+  "name": "variadic flags stop at the next flag",
+  "launch": [
+   "claude",
+   "--tools",
+   "Bash",
+   "Read",
+   "--strict-mcp-config",
+   "--mcp-config",
+   "a.json",
+   "b.json"
+  ],
+  "mode": "default",
+  "added_dirs": [],
+  "cwd": "/home/dev/proj",
+  "expected": "cd /home/dev/proj && claude --tools Bash Read --strict-mcp-config --mcp-config a.json b.json --resume 00000000-0000-4000-8000-000000000042",
+  "warnings": []
+ },
+ {
+  "name": "tool restrictions in every spelling",
+  "launch": [
+   "claude",
+   "--allowedTools",
+   "Bash(git:*)",
+   "--allowed-tools",
+   "Read",
+   "--disallowedTools",
+   "Edit",
+   "--disallowed-tools",
+   "Write"
+  ],
+  "mode": "default",
+  "added_dirs": [],
+  "cwd": "/home/dev/proj",
+  "expected": "cd /home/dev/proj && claude --allowedTools 'Bash(git:*)' --allowed-tools Read --disallowedTools Edit --disallowed-tools Write --resume 00000000-0000-4000-8000-000000000042",
+  "warnings": []
+ },
+ {
+  "name": "single-value launch configuration",
+  "launch": [
+   "claude",
+   "--settings=/x.json",
+   "--setting-sources",
+   "user",
+   "--plugin-dir",
+   "/pl",
+   "--plugin-url",
+   "https://example.com/p.zip",
+   "--agents",
+   "{}",
+   "--fallback-model",
+   "m",
+   "--system-prompt-file",
+   "s.md",
+   "--append-system-prompt",
+   "extra",
+   "--append-system-prompt-file",
+   "e.md"
+  ],
+  "mode": "default",
+  "added_dirs": [],
+  "cwd": "/home/dev/proj",
+  "expected": "cd /home/dev/proj && claude --settings=/x.json --setting-sources user --plugin-dir /pl --plugin-url https://example.com/p.zip --agents '{}' --fallback-model m --system-prompt-file s.md --append-system-prompt extra --append-system-prompt-file e.md --resume 00000000-0000-4000-8000-000000000042",
+  "warnings": []
+ },
+ {
+  "name": "launch dirs and confirmed dirs, no repeats, launch order first",
+  "launch": [
+   "claude",
+   "--add-dir",
+   "/a",
+   "/b",
+   "--chrome"
+  ],
+  "mode": "default",
+  "added_dirs": [
+   "/b",
+   "/c d"
+  ],
+  "cwd": "/home/dev/proj",
+  "expected": "cd /home/dev/proj && claude --add-dir /a --add-dir /b --chrome --add-dir '/c d' --resume 00000000-0000-4000-8000-000000000042",
+  "warnings": []
+ },
+ {
+  "name": "inline --add-dir",
+  "launch": [
+   "claude",
+   "--add-dir=/a"
+  ],
+  "mode": "default",
+  "added_dirs": [],
+  "cwd": "/home/dev/proj",
+  "expected": "cd /home/dev/proj && claude --add-dir /a --resume 00000000-0000-4000-8000-000000000042",
+  "warnings": []
+ },
+ {
+  "name": "dormant session with a confirmed dir",
+  "launch": null,
+  "mode": "default",
+  "added_dirs": [
+   "/x"
+  ],
+  "cwd": "/home/dev/proj",
+  "expected": "cd /home/dev/proj && claude --add-dir /x --resume 00000000-0000-4000-8000-000000000042",
+  "warnings": [
+   "launch-time flags (system prompts, tool and MCP restrictions, settings, plugins) are unknown, because the session has no live process"
+  ]
+ },
+ {
+  "name": "a cwd with a space is quoted",
+  "launch": [
+   "claude"
+  ],
+  "mode": "default",
+  "added_dirs": [],
+  "cwd": "/home/dev/my proj",
+  "expected": "cd '/home/dev/my proj' && claude --resume 00000000-0000-4000-8000-000000000042",
+  "warnings": []
+ },
+ {
+  "name": "everything at once",
+  "launch": [
+   "claude",
+   "--dangerously-skip-permissions",
+   "--model",
+   "opus",
+   "--chrome",
+   "--tools",
+   "Bash"
+  ],
+  "mode": "bypassPermissions",
+  "added_dirs": [
+   "/z"
+  ],
+  "cwd": "/home/dev/proj",
+  "expected": "cd /home/dev/proj && claude --dangerously-skip-permissions --chrome --tools Bash --add-dir /z --resume 00000000-0000-4000-8000-000000000042",
+  "warnings": []
+ }
+]

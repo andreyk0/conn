@@ -1,0 +1,9 @@
+{
+  "session_id": "0a1b2c3d-4e5f-4a6b-8c7d-9e0f1a2b3c4d",
+  "transcript_path": "/home/dev/.claude/projects/-home-dev-proj/0a1b2c3d-4e5f-4a6b-8c7d-9e0f1a2b3c4d.jsonl",
+  "cwd": "/home/dev/proj",
+  "hook_event_name": "UserPromptSubmit",
+  "permission_mode": "default",
+  "prompt": "<task-notification>\n<task-id>task-001</task-id>\n<status>completed</status>\n</task-notification>",
+  "prompt_id": "6e2d3a1f-8b4c-4d0e-9f2a-1b3c4d5e6f70"
+}

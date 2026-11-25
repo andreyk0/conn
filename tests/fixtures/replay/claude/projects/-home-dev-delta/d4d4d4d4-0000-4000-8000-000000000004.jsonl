@@ -1,0 +1,6 @@
+{"type":"user","timestamp":"2026-09-30T21:00:00Z","sessionId":"d4d4d4d4-0000-4000-8000-000000000004","cwd":"/home/dev/delta","isSidechain":false,"origin":{"kind":"human"},"message":{"role":"user","content":"Placeholder earlier prompt."}}
+{"type":"user","timestamp":"2026-09-30T22:00:00Z","sessionId":"d4d4d4d4-0000-4000-8000-000000000004","cwd":"/home/dev/delta","isSidechain":false,"origin":{"kind":"peer"},"message":{"role":"user","content":"<peer>placeholder</peer>"}}
+{"type":"system","timestamp":"2026-09-30T23:00:00Z","sessionId":"d4d4d4d4-0000-4000-8000-000000000004","cwd":"/home/dev/delta","isSidechain":false,"subtype":"turn_duration","durationMs":1}
+{"type":"user","timestamp":"2026-10-01T00:10:00Z","sessionId":"d4d4d4d4-0000-4000-8000-000000000004","cwd":"/home/dev/delta","isSidechain":false,"origin":{"kind":"human"},"message":{"role":"user","content":"Placeholder prompt, see ABC-1 and ABC-2."}}
+{"type":"system","timestamp":"2026-10-01T00:20:00Z","sessionId":"d4d4d4d4-0000-4000-8000-000000000004","cwd":"/home/dev/delta","isSidechain":false,"subtype":"turn_duration","durationMs":1}
+{"type":"system","timestamp":"2026-10-01T00:50:00Z","sessionId":"d4d4d4d4-0000-4000-8000-000000000004","cwd":"/home/dev/delta","isSidechain":false,"subtype":"info"}

@@ -1,0 +1,10 @@
+[
+  {"pid": 4101, "cwd": "/home/dev/alpha", "kind": "interactive", "startedAt": 1761645600000, "sessionId": "00000000-0000-4000-8000-000000000001", "name": "alpha-01", "status": "busy"},
+  {"pid": 4102, "cwd": "/home/dev/beta", "kind": "interactive", "startedAt": 1761649200000, "sessionId": "00000000-0000-4000-8000-000000000002", "name": "beta-01", "status": "waiting", "waitingFor": "permission prompt"},
+  {"pid": 4103, "cwd": "/home/dev/gamma", "kind": "interactive", "startedAt": 1761649300000, "sessionId": "00000000-0000-4000-8000-000000000003", "name": "gamma-01", "status": "hibernating", "futureField": {"nested": [1, 2, 3]}},
+  {"pid": 4104, "cwd": "/home/dev/delta", "kind": "interactive", "startedAt": 1761649400000, "sessionId": "00000000-0000-4000-8000-000000000004", "name": "delta-01", "status": "waiting", "waitingFor": "quota hold"},
+  {"pid": 4201, "id": "abcd0001", "cwd": "/home/dev/epsilon", "kind": "background", "startedAt": 1761649500000, "sessionId": "00000000-0000-4000-8000-000000000005", "name": "epsilon-job", "status": "waiting", "waitingFor": "input needed", "state": "blocked"},
+  {"id": "abcd0002", "cwd": "/home/dev/zeta", "kind": "background", "startedAt": 1761649600000, "name": "zeta-job", "state": "done"},
+  {"id": "abcd0003", "cwd": "/home/dev/eta", "kind": "background", "startedAt": 1761649700000, "sessionId": "00000000-0000-4000-8000-000000000007", "name": "eta-job", "state": "paused"},
+  {"cwd": "/home/dev/theta", "kind": "scheduled", "startedAt": 1761649800000, "sessionId": "00000000-0000-4000-8000-000000000008", "name": "theta-run"}
+]

@@ -1,0 +1,9 @@
+# Tests may assert by unwrapping; production code may not (see [lints] in Cargo.toml).
+allow-unwrap-in-tests = true
+allow-expect-in-tests = true
+allow-panic-in-tests = true
+allow-indexing-slicing-in-tests = true
+
+disallowed-types = [
+    { path = "maud::PreEscaped", reason = "all HTML is escaped by maud; a URL becomes an href only as a SafeUrl" },
+]

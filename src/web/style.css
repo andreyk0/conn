@@ -1,0 +1,575 @@
+:root {
+  color-scheme: light dark;
+  --bg: #f6f6f3;
+  --panel: #ffffff;
+  --text: #1d1f21;
+  --muted: #5f6368;
+  --line: #d9d9d2;
+  --accent: #1a5fb4;
+  --blocked: #b3261e;
+  --watching: #8a5a00;
+  --idle: #1b6e3c;
+  --running: #1a5fb4;
+  --neutral: #5f6368;
+  --warn-bg: #fff1d6;
+  --bad-bg: #fde4e1;
+  --code-bg: #eeeee8;
+  --review: #7b3fb0;
+  --gist-bg: #e8eef7;
+  --active: #e8710a;
+  --coord-bg: #f1e8fa;
+  --pin: #e0a800;
+  --epic: #6a3fb5;
+  --epic-bg: #efe7fb;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #17181a;
+    --panel: #202225;
+    --text: #e4e4e0;
+    --muted: #9aa0a6;
+    --line: #34373b;
+    --accent: #7cacf8;
+    --blocked: #f28b82;
+    --watching: #e6b450;
+    --idle: #6fcf97;
+    --running: #7cacf8;
+    --neutral: #9aa0a6;
+    --warn-bg: #3a3017;
+    --bad-bg: #3d1f1c;
+    --code-bg: #2a2c30;
+    --review: #c39bf0;
+    --gist-bg: #29303b;
+    --active: #f29b4b;
+    --coord-bg: #2e2638;
+    --pin: #f2c230;
+    --epic: #c3a6f5;
+    --epic-bg: #2c2440;
+  }
+}
+
+* { box-sizing: border-box; }
+
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 14px/1.45 system-ui, sans-serif;
+}
+
+a { color: var(--accent); }
+
+/* The full window, with a narrow gutter: the header's nav and gauges fit one line, and tables
+   get the room. Prose keeps its own measure (`.body p`). */
+main, .bar-inner, footer {
+  margin: 0;
+  padding: 0 16px;
+}
+
+main { padding-top: 10px; padding-bottom: 20px; }
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--panel);
+  border-bottom: 1px solid var(--line);
+}
+
+.bar-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 14px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+.brand { font-weight: 700; }
+
+nav { display: flex; gap: 4px; flex-wrap: wrap; }
+
+nav a {
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-decoration: none;
+  color: var(--text);
+}
+
+nav a.active { background: var(--code-bg); font-weight: 600; }
+
+.status { margin-left: auto; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+.age { color: var(--muted); }
+
+/* The freshness dot in the header; its title says how old the cards are. */
+.dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; }
+.dot.fresh { background: var(--idle); }
+.dot.stale { background: var(--watching); }
+.dot.held { background: var(--blocked); }
+.usage { display: flex; gap: 10px; font-size: 12px; font-variant-numeric: tabular-nums; }
+.usage.stale { color: var(--muted); }
+.usage meter { width: 36px; height: 8px; vertical-align: middle; }
+.usage .reset { color: var(--muted); }
+
+/* The coordination ledger: a card's line, and the "Who owns what" page. */
+.coord {
+  margin: 6px 0;
+  padding: 4px 8px;
+  font-size: 13px;
+  background: var(--coord-bg);
+  border-left: 3px solid var(--review);
+  border-radius: 4px;
+}
+.coord .over, .waits .over, li.over .over { color: var(--watching); }
+.who.ended a, .who.unseen a { color: var(--muted); }
+.owned-by { font-size: 12px; color: var(--muted); }
+.deferred { display: block; font-size: 12px; color: var(--muted); }
+table.not-yet { font-size: 13px; }
+table.not-yet td.when { white-space: nowrap; }
+.clash { color: var(--blocked); font-weight: 600; }
+.collision { background: var(--panel); border: 1px solid var(--line); border-left: 3px solid var(--blocked); border-radius: 6px; padding: 6px 12px; margin-bottom: 8px; }
+.collision h3 { margin: 4px 0; font-size: 14px; }
+table.writes { border-collapse: collapse; width: 100%; font-size: 13px; }
+table.writes td { padding: 3px 8px; border-top: 1px solid var(--line); vertical-align: top; }
+table.writes td:nth-child(1), table.writes td:nth-child(3) { white-space: nowrap; }
+table.writes tr.foreign td { background: var(--bad-bg); }
+table.writes .excerpt { color: var(--muted); }
+.earlier-writes summary { cursor: pointer; font-size: 12px; color: var(--muted); }
+.mentions summary { cursor: pointer; font-size: 12px; color: var(--muted); }
+/* "Owned": a card per owner session, what it owns as chips; ended owners dimmed below. */
+.owner-groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(22em, 1fr));
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.owner-group { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px; }
+.owner-group.running { border-left: 3px solid var(--review); }
+.owner-head { font-weight: 600; margin-bottom: 4px; }
+.owner-head .badge { font-weight: 400; }
+.badge.over { color: var(--watching); }
+ul.owned-chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 6px; }
+ul.owned-chips li { font-size: 13px; padding: 1px 6px; border-radius: 4px; background: var(--coord-bg); white-space: nowrap; }
+.owner-groups.ended { opacity: 0.6; }
+.owner-groups.ended:hover { opacity: 1; }
+.owners-ended { margin: 4px 0; }
+.rollout { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 6px 12px; margin-bottom: 8px; }
+.rollout h3 { margin: 4px 0; font-size: 14px; }
+.outcome { font-weight: 600; }
+.outcome.running { color: var(--running); }
+.outcome.shipped { color: var(--idle); }
+.outcome.rolled-back { color: var(--blocked); }
+.outcome.abandoned { color: var(--neutral); }
+ol.ledger-log { font-size: 13px; padding-left: 24px; }
+ol.ledger-log li { margin: 2px 0; }
+
+.badge {
+  display: inline-block;
+  padding: 0 7px;
+  border-radius: 9px;
+  border: 1px solid currentColor;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.badge.blocked { color: var(--blocked); font-weight: 600; }
+.badge.watching, .badge.scan { color: var(--watching); }
+.badge.idle { color: var(--idle); }
+.badge.running { color: var(--running); }
+.badge.unknown, .badge.dormant, .badge.gone { color: var(--neutral); }
+.badge.pr-open { color: var(--idle); }
+.badge.pr-merged { color: var(--running); }
+.badge.pr-closed, .badge.pr-draft, .badge.pr-unread, .badge.pr-not-found { color: var(--neutral); }
+.badge.pr-failed { color: var(--blocked); }
+
+.healthline a { color: inherit; }
+
+.healthline {
+  flex-basis: 100%;
+  background: var(--bad-bg);
+  color: var(--blocked);
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.flash { background: var(--warn-bg); padding: 6px 10px; border-radius: 4px; margin-bottom: 8px; }
+.flash.bad { background: var(--bad-bg); }
+
+h1 { font-size: 18px; margin: 4px 0 8px; }
+h2 { font-size: 15px; margin: 14px 0 6px; }
+
+.card, .row, .panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+}
+
+.card.seen { opacity: 0.55; }
+.card.waiting { opacity: 0.8; }
+/* The card last clicked in this tab; an outline, so the layout does not move. */
+.card.active { outline: 2px solid var(--active); outline-offset: -1px; }
+/* A review request: someone else's pull request, told apart from a session at a glance. */
+.card.review { border-left: 4px solid var(--review); }
+.badge.review { color: var(--review); border-color: var(--review); }
+.review-title { margin: 4px 0 0; font-weight: 600; }
+.verdict { margin: 4px 0; }
+.verdict.look { background: var(--warn-bg); padding: 4px 8px; border-radius: 4px; }
+.verdict.look ul { margin: 2px 0 0; padding-left: 18px; }
+.verdict.unclassified { color: var(--watching); }
+.flag-by { font-size: 11px; color: var(--muted); text-transform: uppercase; }
+.card.seen:hover, .card.waiting:hover { opacity: 1; }
+
+.card-head { display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: baseline; }
+/* The pin in the top right corner of a card or a session row pins and unpins the session: a
+   grey pin waiting to be pushed in, a yellow one holding it. The text keeps clear of it. */
+article.card, div.row { position: relative; }
+article.card .card-head { padding-right: 24px; }
+div.row { padding-right: 30px; }
+.pin-toggle { position: absolute; top: 4px; right: 4px; margin: 0; }
+.pin-toggle button { padding: 2px; border: 0; background: none; line-height: 0; color: var(--neutral); opacity: 0.45; }
+.pin-toggle button:hover { opacity: 1; }
+.pin-toggle svg { width: 16px; height: 16px; }
+.pin-toggle circle { fill: currentColor; }
+.pin-toggle line { stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; }
+.card.pinned .pin-toggle button, .row.pinned .pin-toggle button { color: var(--pin); opacity: 1; }
+.card-head h2 { margin: 0; font-size: 15px; }
+.card-head h2 a { text-decoration: none; }
+/* What the session is about, and who the card waits on: read before anything else on it. */
+.gist {
+  display: flex; flex-wrap: wrap; gap: 2px 6px; align-items: baseline;
+  margin: 4px 0 2px; padding: 4px 8px; border-radius: 4px;
+  background: var(--gist-bg); font-size: 14px;
+}
+.gist .note { font-size: 12px; color: var(--muted); }
+.badge.ask-decide, .badge.ask-act { color: var(--blocked); font-weight: 600; }
+.badge.ask-others { color: var(--watching); }
+.badge.ask-release { color: var(--active); font-weight: 600; }
+.badge.ask-nothing { color: var(--neutral); }
+
+.chip {
+  display: inline-block;
+  padding: 0 6px;
+  border-radius: 4px;
+  background: var(--code-bg);
+  font-size: 12px;
+  margin: 2px 4px 2px 0;
+}
+
+.muted { color: var(--muted); font-size: 12px; }
+
+.body p, details.earlier p { margin: 4px 0; overflow-wrap: anywhere; }
+.body p, .body li { max-width: 80ch; }
+.body h3, .body h4, .panel h3, .panel h4 { font-size: 14px; margin: 8px 0 2px; }
+.body ul, .body ol, .panel ul, .panel ol { margin: 4px 0; padding-left: 22px; }
+.body blockquote, .panel blockquote { margin: 4px 0; padding-left: 10px; border-left: 3px solid var(--line); color: var(--muted); }
+.body pre, .panel pre {
+  margin: 4px 0;
+  padding: 4px 6px;
+  background: var(--code-bg);
+  border-radius: 4px;
+  font: 12px/1.4 ui-monospace, monospace;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.body code, .panel code { font: 12px ui-monospace, monospace; background: var(--code-bg); padding: 0 3px; border-radius: 3px; }
+.body pre code, .panel pre code { padding: 0; background: none; }
+.body td.right, .body th.right, .panel td.right, .panel th.right { text-align: right; }
+.body td.center, .body th.center, .panel td.center, .panel th.center { text-align: center; }
+
+.question { margin: 6px 0; }
+.lead { display: inline; }
+.lead > p:first-child { display: inline; margin: 0; }
+.question ol { margin: 2px 0; padding-left: 22px; }
+.tag { font-size: 11px; background: var(--code-bg); padding: 0 5px; border-radius: 4px; }
+/* Unseen comments on a ticket: the one tag that asks for a look. */
+.tag.comments { background: var(--accent); color: var(--panel); font-weight: 600; }
+
+.more-toggle { position: absolute; opacity: 0; pointer-events: none; }
+.clip { max-height: 14em; overflow: hidden; }
+.more-toggle:checked ~ .clip { max-height: none; }
+.more { font-size: 12px; cursor: pointer; color: var(--accent); }
+.more-toggle:checked ~ .more .more-open { display: none; }
+.more .more-close { display: none; }
+.more-toggle:checked ~ .more .more-close { display: inline; }
+
+details.earlier { margin: 4px 0; color: var(--muted); }
+
+.links { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 6px; margin: 4px 0; }
+.links .chip { margin: 0; }
+/* Whose a link is: this session's own stands out, another session's is dimmed and names it. */
+.chip .own-mark { color: var(--accent); font-size: 10px; }
+.chip.theirs > a { color: var(--muted); }
+.chip .owner { color: var(--muted); }
+.chip.pr { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+.chip.pr.stale { background: var(--bad-bg); }
+.chip .glyph { font-weight: 600; }
+.chip .age { color: var(--blocked); }
+.chip form.act { display: inline-flex; margin: 0; }
+.chip button.icon { padding: 0 3px; border: 0; background: none; font-size: 13px; line-height: 1; color: var(--accent); }
+
+.actions { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 6px; }
+.actions form, form.inline { display: inline-flex; flex-wrap: wrap; gap: 4px; align-items: center; margin: 0; }
+.actions .cmd { flex: 1 1 28em; margin: 0; }
+.actions ul.muted { flex-basis: 100%; margin: 0; }
+
+button, select, input[type="text"] {
+  font: inherit;
+  padding: 2px 8px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--panel);
+  color: var(--text);
+}
+
+button { cursor: pointer; }
+button.primary { border-color: var(--accent); color: var(--accent); }
+
+/* The reply composer: a mode a card is switched into, outlined while it lasts. */
+.composer { margin-top: 6px; }
+.replyable.composing { outline: 1px dashed var(--accent); outline-offset: 4px; border-radius: 2px; }
+.replyable.composing .clip { max-height: none; }
+button.reply-mark {
+  margin-left: 6px; padding: 0 5px; font-size: 12px; line-height: 1.4;
+  color: var(--accent); border-color: var(--accent); vertical-align: baseline;
+}
+.reply-slot { position: relative; margin: 4px 0 8px; padding: 6px 30px 6px 8px; background: var(--gist-bg); border-radius: 4px; }
+.reply-slot blockquote { margin: 0 0 4px; font-size: 12px; }
+.reply-slot textarea, .composer textarea {
+  width: 100%; box-sizing: border-box; font: inherit; padding: 4px 6px;
+  border: 1px solid var(--line); border-radius: 4px; background: var(--panel); color: var(--text); resize: vertical;
+}
+button.reply-remove { position: absolute; top: 4px; right: 4px; padding: 0 6px; border: 0; background: none; color: var(--muted); }
+
+.cmd { display: flex; gap: 6px; align-items: flex-start; margin: 4px 0; }
+.cmd pre {
+  flex: 1;
+  margin: 0;
+  padding: 3px 6px;
+  background: var(--code-bg);
+  border-radius: 4px;
+  font: 12px/1.4 ui-monospace, monospace;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.focus-result { background: var(--warn-bg); padding: 4px 8px; border-radius: 4px; margin-top: 6px; }
+.focus-result .msg { margin: 0 0 2px; }
+
+.row { display: grid; grid-template-columns: 1fr; gap: 2px; }
+.row .first { white-space: pre-wrap; overflow-wrap: anywhere; color: var(--muted); }
+.cwd { font: 12px ui-monospace, monospace; overflow-wrap: anywhere; color: var(--muted); }
+
+table { width: 100%; border-collapse: collapse; background: var(--panel); }
+th, td { text-align: left; padding: 4px 8px; border-bottom: 1px solid var(--line); vertical-align: top; overflow-wrap: anywhere; }
+th { color: var(--muted); font-weight: 600; font-size: 12px; }
+td.bad { color: var(--blocked); font-weight: 600; }
+
+.body table, .panel table { display: block; width: 100%; overflow-x: auto; }
+.body th, .body td, .panel th, .panel td { padding: 0.2em 0.6em; }
+.body th, .panel th { white-space: nowrap; background: var(--code-bg); color: var(--text); border-bottom: 2px solid var(--line); }
+.body td:first-child, .panel td:first-child { white-space: nowrap; }
+
+.empty { color: var(--muted); padding: 10px 0; }
+
+footer { color: var(--muted); font-size: 12px; padding-bottom: 20px; }
+
+.problem { background: var(--bad-bg); color: var(--blocked); padding: 3px 8px; border-radius: 4px; }
+.hits { list-style: none; margin: 4px 0; padding: 0; }
+.hits li { margin: 2px 0; }
+.snippet { overflow-wrap: anywhere; }
+mark { background: var(--warn-bg); color: inherit; padding: 0 1px; border-radius: 2px; }
+table.items { table-layout: auto; width: 100%; }
+table.items td { vertical-align: top; overflow-wrap: break-word; }
+table.items td.key, table.items td.creator { white-space: nowrap; }
+.items-section { margin: 14px 0 4px; font-size: 15px; }
+table.items td.desc { min-width: 28ch; max-width: 60ch; color: var(--muted); }
+table.items .clamp {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+}
+table.items td.sessions { max-width: 45%; }
+/* The PAM page: a live grant's row is tinted; break-glass entitlements sit apart, dimmed, in a
+   thin red box. */
+table.pam th, table.pam td.max, table.pam td.approval { white-space: nowrap; }
+table.pam td { vertical-align: middle; }
+/* The table fits the window: the request form, the thing most often reached for, must never
+   run off its right edge. */
+table.pam { width: 100%; }
+table.pam td.entitlement { max-width: 24em; }
+/* The parent's id and the roles each take a line of their own, never broken mid-id; roles
+   that run long end in an ellipsis, the whole list on hover. */
+.pam-line {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+table.pam td.grant { min-width: 10em; }
+.pam-place { font-weight: 600; color: var(--accent); }
+a .pam-place { text-decoration: underline; text-decoration-thickness: 1px; }
+table.pam td.request { white-space: nowrap; }
+/* A held grant: green while active, amber while it waits for approval, with a bar on the
+   left, so the first glance finds it. */
+table.pam tr.held.active td { background: color-mix(in srgb, var(--idle) 14%, var(--panel)); }
+table.pam tr.held.pending td { background: var(--warn-bg); }
+table.pam tr.held td:first-child { box-shadow: inset 4px 0 0 var(--idle); }
+table.pam tr.held.pending td:first-child { box-shadow: inset 4px 0 0 var(--watching); }
+table.pam tr.held .pam-state { font-size: 15px; }
+table.pam tr.held.active .pam-state { color: var(--idle); }
+table.pam tr.held.pending .pam-state { color: var(--watching); }
+table.pam .pam-left { font-size: 15px; font-weight: 600; }
+/* A group's header: where its entitlements sit. */
+table.pam tr.pam-group td {
+  padding-top: 12px;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg);
+}
+table.pam form.act { display: flex; flex-wrap: nowrap; gap: 4px; align-items: center; margin: 0; }
+table.pam input[name="justification"] { width: 13em; }
+section.break-glass {
+  margin-top: 24px;
+  padding: 4px 10px 10px;
+  border: 2px solid var(--blocked);
+  border-radius: 4px;
+  opacity: 0.7;
+}
+section.break-glass:hover, section.break-glass:focus-within { opacity: 1; }
+section.break-glass h2 { margin: 6px 0; font-size: 15px; color: var(--blocked); }
+/* Saved sets of sessions: a compact list above the sessions, and one save's page. */
+.saves { margin-bottom: 14px; }
+.saves-head { display: flex; align-items: center; gap: 12px; }
+.saves-head h2 { margin: 0; }
+.saves-list { list-style: none; padding: 0; margin: 6px 0; }
+.saves-list li { display: flex; align-items: center; gap: 8px; padding: 2px 0; }
+.saves-list form.act { display: inline; }
+button.trash { padding: 0 6px; background: none; border: none; cursor: pointer; opacity: 0.6; }
+button.trash:hover { opacity: 1; }
+.tag.auto-save { background: var(--accent); color: var(--panel); }
+.tag.before-reboot { background: var(--watching); color: var(--panel); }
+.tag.back { background: var(--idle); color: var(--panel); }
+.saved-session { border-top: 1px solid var(--line); padding: 8px 0; }
+.saved-session.running { opacity: 0.6; }
+.saved-session h3 { margin: 0 0 4px; font-size: 15px; }
+
+/* An epic: tinted, with how many of its children are done. */
+table.items tr.epic td { background: var(--epic-bg); }
+.tag.epic { background: var(--epic); color: var(--panel); font-weight: 600; }
+.epic-progress { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: var(--epic); }
+.epic-progress meter { width: 48px; height: 8px; accent-color: var(--epic); }
+/* An epic's items, under it like files under a directory; an epic outside the status heads
+   its items here with a fainter tint. */
+table.items tr.child td.key { padding-left: 16px; white-space: nowrap; }
+table.items tr.child td:first-child { border-left: 3px solid var(--epic-bg); }
+.branch { color: var(--epic); font-family: monospace; }
+table.items tr.epic-head td { opacity: 0.85; }
+/* An item waiting on an open ticket: cannot be picked up yet, so it recedes. */
+table.items tr.waiting td { opacity: 0.6; }
+.waits-on { font-size: 12px; color: var(--watching); }
+table.items .chips { display: inline-flex; flex-wrap: wrap; gap: 4px; }
+table.items .chips .chip { margin: 0; }
+
+/* A local file: a link to it reads as one, its page is a column of text, and its pop-up
+   takes most of the window. */
+a.file-link code { color: var(--accent); text-decoration: underline; }
+.file-view { max-width: 90ch; margin: 0 auto; }
+.file-view header h1 { margin: 10px 0 0; font-size: 18px; }
+.file-view header p { margin: 2px 0 10px; overflow-wrap: anywhere; }
+.file-view .body h3 { font-size: 16px; }
+.file-view .body h4 { font-size: 14px; }
+.file-dialog {
+  width: min(100ch, 92vw);
+  max-height: 86vh;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel);
+  color: var(--text);
+}
+.file-dialog::backdrop { background: rgb(0 0 0 / 45%); }
+/* The bar keeps its height and the body scrolls in what is left, so there is one scrollbar
+   whatever the bar's height. */
+.file-dialog[open] { display: flex; flex-direction: column; overflow: hidden; }
+.file-dialog-bar {
+  display: flex;
+  flex: none;
+  gap: 10px;
+  align-items: baseline;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--line);
+}
+.file-dialog-name { flex: 1; overflow-wrap: anywhere; font-size: 12px; }
+.file-dialog-body { flex: 1; min-height: 0; padding: 0 14px 14px; overflow: auto; }
+.file-dialog-body .file-view header h1 { margin-top: 6px; }
+
+/* The map: a dependency graph drawn as SVG, and a detail card per node shown while the URL's
+   fragment names it. One colour per state, for a session's motion and a ticket's progress
+   alike, taken from `--c`. */
+.moving { --c: var(--idle); }
+.blocked, .blocking { --c: var(--blocked); }
+.waiting { --c: var(--watching); }
+/* A release: the user's to run, but not a move for now, in one colour wherever it shows. */
+.awaiting-release { --c: var(--active); }
+.idle { --c: var(--running); }
+.queued, .unknown { --c: var(--muted); }
+.dormant, .done { --c: var(--neutral); }
+.map-legend { display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: center; font-size: 12px; margin: 6px 0 10px; }
+.map-legend .key { display: inline-flex; gap: 5px; align-items: center; }
+.map-legend svg { width: 30px; height: 8px; }
+svg.deps { width: 100%; height: auto; display: block; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 8px; margin-bottom: 16px; }
+svg.deps a { cursor: pointer; }
+svg.deps rect { fill: var(--panel); stroke: var(--c, var(--line)); stroke-width: 2; }
+svg.deps rect.n-session { fill: var(--bg); }
+svg.deps rect.n-rollout { stroke: var(--running); stroke-dasharray: 5 3; }
+svg.deps rect.n-rollout.running { stroke-dasharray: none; fill: var(--gist-bg); }
+svg.deps rect.n-rollout.pending, .map-legend rect.n-rollout.pending { stroke: var(--active); stroke-dasharray: none; fill: var(--warn-bg); stroke-width: 2.5; }
+.map-legend rect.n-session.awaiting-release { fill: var(--bg); stroke: var(--c); stroke-width: 2; }
+svg.deps rect.n-target.thread { stroke: var(--review); }
+svg.deps rect.orphaned { fill: var(--warn-bg); }
+svg.deps a:hover rect { stroke-width: 3.5; }
+svg.deps text { fill: var(--text); font-size: 13px; }
+svg.deps text.sub { fill: var(--muted); font-size: 11px; }
+svg.deps path, .map-legend line { fill: none; stroke-width: 1.8; }
+svg.deps marker path { fill: var(--muted); stroke: none; }
+.e-owns { stroke: var(--review); }
+.e-runs { stroke: var(--running); }
+.e-waits { stroke: var(--watching); stroke-dasharray: 6 4; }
+.e-waits.over { stroke: var(--idle); stroke-dasharray: none; }
+.e-ships { stroke: var(--neutral); stroke-width: 1.2; }
+.e-collided { stroke: var(--blocked); stroke-dasharray: 2 3; stroke-width: 2.2; }
+.e-blocks { stroke: var(--blocked); stroke-width: 2; }
+.map-details .detail {
+  display: none;
+  position: fixed;
+  right: 16px;
+  top: 72px;
+  width: min(540px, 92vw);
+  max-height: 80vh;
+  overflow: auto;
+  z-index: 20;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px 14px;
+  box-shadow: 0 6px 24px rgb(0 0 0 / 25%);
+}
+.map-details .detail:target { display: block; }
+.detail-head { display: flex; align-items: baseline; gap: 8px; }
+.detail-head h3 { flex: 1; margin: 2px 0 6px; font-size: 15px; }
+.detail-close { text-decoration: none; font-size: 20px; color: var(--muted); }
+/* In a card the writes are too narrow for four columns: the time, who and what on one line,
+   the excerpt under them. */
+.detail h4 { margin: 10px 0 4px; font-size: 13px; }
+.detail table.writes, .detail table.writes tbody, .detail table.writes tr { display: block; }
+.detail table.writes tr { padding: 4px 0; border-top: 1px solid var(--line); }
+.detail table.writes td { display: inline; padding: 0 6px 0 0; border: 0; }
+.detail table.writes td:last-child { display: block; padding-top: 2px; }
+ul.map-alone { columns: 2 320px; padding-left: 18px; }

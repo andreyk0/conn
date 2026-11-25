@@ -1,0 +1,56 @@
+# ~/.config/conn/config.toml (override the location with CONN_CONFIG).
+# Hosts and prefixes below are placeholders: put your own here, never in the repository.
+
+# Optional: leave the section out (or empty) where there is no Jira; then no key is a link and
+# the work items page is off. When present, both fields are required.
+[jira]
+host = "example.atlassian.net"   # bare hostname, no scheme
+prefixes = ["ABC", "XYZ"]        # project keys whose issue keys become links
+
+# Optional: leave the section out (or empty) where there is no Slack; then a Slack URL is an
+# ordinary link. `[reviews]` below needs it.
+[slack]
+host = "example.slack.com"
+
+# Optional: a bare `repo#12` resolves against this owner.
+[github]
+default_owner = "example-org"
+
+# Optional: the directories a local .md file a session names may be opened from in the site,
+# absolute paths only. Absent, paths stay plain text.
+[files]
+roots = ["/home/you", "/run/user/1000/claude-1000"]
+
+# Optional: Slack conversations where people ask you to approve pull requests. Each open pull
+# request linked there in the last 14 days, written by someone else and not yet approved by you
+# at its current commit, is an inbox card. Read through Claude's Slack connector with a headless
+# run, only while a conn page was viewed in the last hour. Ids are the last part of a Slack URL:
+# C… channels, G… private channels, D… direct messages.
+[reviews]
+channels = [
+  "C0123ABCD",  # #team-reviews
+  "D0456EFGH",  # DM with a teammate
+]
+
+# Optional: the Follow-ups page, which lists what is due and who is best placed to act on it:
+# comments on your work items after your latest reply, sessions whose wait is over, releases
+# sessions wait on that nobody runs, claims whose owner ended, and work items in a status named
+# here as shipped and waiting for its close check. Absent, the page is off.
+[followups]
+close_statuses = ["Prod"]  # optional; the status names exactly as your Jira writes them
+
+# Optional: the PAM page, which lists the GCP Privileged Access Manager entitlements you may
+# request, the grants you hold with the time each has left, and requests one in a click. Read
+# with gcloud, as you, only while the page was viewed in the last few minutes. Absent or
+# empty, the page is off and gcloud is never run.
+[pam]
+organizations = ["123456789012"]  # the organizations whose entitlements are searched
+quota_project = "example-project" # pays for the organization-wide asset searches
+# Optional: entitlements kept for emergencies, as the page writes their names; they are
+# listed apart, at the bottom.
+break_glass = ["organizations/123456789012/locations/global/entitlements/break-glass-admin"]
+
+# Optional: absolute paths only. These are the defaults.
+[paths]
+claude_dir = "/home/you/.claude"
+state_dir = "/home/you/.local/state/conn"

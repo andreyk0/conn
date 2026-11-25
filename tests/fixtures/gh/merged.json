@@ -1,0 +1,22 @@
+{
+  "isDraft": false,
+  "mergedAt": "2026-10-20T09:12:00Z",
+  "number": 42,
+  "reviewDecision": "APPROVED",
+  "state": "MERGED",
+  "statusCheckRollup": [
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-10-20T09:05:00Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/example-org/example-repo/actions/runs/1001",
+      "name": "build",
+      "startedAt": "2026-10-20T09:00:00Z",
+      "status": "COMPLETED",
+      "workflowName": "Placeholder workflow"
+    }
+  ],
+  "title": "Placeholder pull request title",
+  "updatedAt": "2026-10-20T09:10:00Z",
+  "url": "https://github.com/example-org/example-repo/pull/42"
+}

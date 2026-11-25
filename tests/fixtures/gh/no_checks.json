@@ -1,0 +1,11 @@
+{
+  "isDraft": false,
+  "mergedAt": null,
+  "number": 42,
+  "reviewDecision": "",
+  "state": "OPEN",
+  "statusCheckRollup": [],
+  "title": "Placeholder pull request title",
+  "updatedAt": "2026-10-20T09:10:00Z",
+  "url": "https://github.com/example-org/example-repo/pull/42"
+}

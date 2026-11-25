@@ -1,0 +1,8 @@
+[
+  {"id": 10, "title": "~/work", "app_id": "kitty", "pid": 5001, "workspace_id": 1, "is_focused": false, "is_floating": false, "is_urgent": false, "focus_timestamp": null, "layout": {}},
+  {"id": 11, "title": "✳ Plan the migration", "app_id": "kitty", "pid": 5002, "workspace_id": 1, "is_focused": true, "is_floating": false, "is_urgent": false, "focus_timestamp": {"secs": 1, "nanos": 2}, "layout": {}},
+  {"id": 12, "title": "◐ Shared title", "app_id": "kitty", "pid": 5003, "workspace_id": 2, "is_focused": false, "is_floating": false, "is_urgent": false, "focus_timestamp": null, "layout": {}},
+  {"id": 13, "title": "✳ Shared title", "app_id": "kitty", "pid": 5004, "workspace_id": 2, "is_focused": false, "is_floating": false, "is_urgent": false, "focus_timestamp": null, "layout": {}},
+  {"id": 14, "title": "Plan the migration", "app_id": "placeholder-docs", "pid": 5005, "workspace_id": 3, "is_focused": false, "is_floating": false, "is_urgent": false, "focus_timestamp": null, "layout": {}},
+  {"id": 15, "title": null, "app_id": null, "pid": null, "workspace_id": null, "is_focused": false, "is_floating": true, "is_urgent": false, "focus_timestamp": null, "layout": {}}
+]
